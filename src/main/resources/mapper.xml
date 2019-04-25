@@ -1,0 +1,67 @@
+<mapper namespace="com.xu.database.Mapper">
+    <resultMap id="userMap" type="User" autoMapping="true"></resultMap>
+    <resultMap id="projectMap" type="Project" autoMapping="true"></resultMap>
+    <resultMap id="sessionMap" type="Session" autoMapping="true"></resultMap>
+
+    <insert id="createUser">
+        INSERT INTO USERS (firstname, lastname, email) VALUES (#{firstname}, #{lastname}, #{email});
+    </insert>
+
+    <update id="updateUser">
+        UPDATE USERS SET firstname=#{firstname}, lastname=#{lastname} WHERE id=#{id};
+    </update>
+
+    <select id="getUser" resultMap="userMap">
+        SELECT * FROM USERS WHERE id=#{id};
+    </select>
+
+    <update id="deleteUser">
+        DELETE FROM USERS WHERE id=#{id};
+    </update>
+
+    <select id="getAllUsers" resultMap="userMap">
+        SELECT * FROM USERS;
+    </select>
+
+    <select id="getAllEmails" resultMap="String">
+        SELECT email from USERS;
+    </select>
+
+
+    <insert id="createProject">
+        INSERT INTO PROJECTS (name, user_id) VALUES (#{name}, #{uid});
+    </insert>
+
+    <update id="updateProject">
+        UPDATE PROJECTS SET name=#{name} WHERE user_id=#{uid} AND id=#{pid};
+    </update>
+
+    <update id="deleteProject">
+        DELETE FROM PROJECTS WHERE user_id=#{uid} AND id=#{pid};
+    </update>
+
+    <select id="getProject" resultMap="projectMap">
+        SELECT * FROM PROJECTS WHERE user_id=#{uid} AND id=#{pid};
+    </select>
+
+    <select id="getAllProjects" resultMap="projectMap">
+        SELECT * FROM PROJECTS WHERE user_id=#{uid};
+    </select>
+
+    <insert id="createSession">
+        INSERT INTO SESSIONS (start_time, end_time, counter, user_id, project_id) VALUES (#{start_time}, #{end_time}, #{counter}, #{uid}, #{pid});
+    </insert>
+
+    <update id="updateSession">
+        UPDATE SESSIONS SET start_time=#{start_time}, end_time=#{end_time}, counter=#{counter} WHERE user_id=#{uid} AND project_id=#{pid} AND id=#{sid};
+    </update>
+
+    <select id="getSession" resultMap="sessionMap">
+        SELECT * FROM SESSIONS WHERE user_id=#{uid} AND project_id=#{pid} AND id=#{sid};
+    </select>
+
+    <select id="getAllSessions" resultMap="sessionMap">
+        SELECT * FROM SESSION WHERE user_id=#{uid} AND project_id=#{pid};
+    </select>
+
+</mapper>
