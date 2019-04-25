@@ -5,9 +5,9 @@ public class Session {
     String end_time;
     int counter;
 
-    public session(){};
+    public Session(){};
 
-    public session(String start_time, String end_time, int counter) {
+    public Session(String start_time, String end_time, int counter) {
         this.start_time = start_time;
         this.end_time = end_time;
         this.counter = counter;

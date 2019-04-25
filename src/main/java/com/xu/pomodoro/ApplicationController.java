@@ -46,6 +46,11 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.POST, value = "/users")
     public ResponseEntity<?> createUser(@RequestBody User newUser)
     {
+        if(newUser.getEmail() == null || newUser.getEmail().isEmpty() ||
+                newUser.getFirst_name() == null || newUser.getFirst_name().isEmpty() ||
+                newUser.getLast_name() == null || newUser.getLast_name().isEmpty()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         if(!ptt.checkUserEmailConflict()){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -75,8 +80,7 @@ public class ApplicationController {
         if(existed == null){
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-        if(newUser.getEmail() == null || newUser.getEmail().isEmpty() ||
-                newUser.getFirst_name() == null || newUser.getFirst_name().isEmpty() ||
+        if(newUser.getFirst_name() == null || newUser.getFirst_name().isEmpty() ||
                 newUser.getLast_name() == null || newUser.getLast_name().isEmpty()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -304,7 +308,7 @@ public class ApplicationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if(from == null || to == null || from == "" || to == ""){
+        if(from == null || to == null || from.isEmpty() || to.isEmpty()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -324,7 +328,7 @@ public class ApplicationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Report report = ptt.getReport(uid, pid, includeCompletedPomodoros, includeTotalHoursWorkedOnProject);
+        Report report = ptt.getReport(uid, pid, from, to, includeCompletedPomodoros, includeTotalHoursWorkedOnProject);
 
         return new ResponseEntity<>(report, HttpStatus.OK);
     }

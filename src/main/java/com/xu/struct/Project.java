@@ -6,14 +6,14 @@ public class Project {
     int uid;
     int id;
 
-    public project(){
+    public Project(){
         name = "";
         num_session = 0;
         uid = 0;
         id = 0;
     }
 
-    public project(String name, int uid){
+    public Project(String name, int uid){
         this.name = name;
         this.uid = uid;
         num_session = 0;

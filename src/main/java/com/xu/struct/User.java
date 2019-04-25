@@ -6,13 +6,13 @@ public class User {
     String email;
     int id = 0;
 
-    user(){
+    public User(){
         first_name = "";
         last_name = "";
         id = 0;
         email = "";
     }
-    user(String first_name, String last_name, String email){
+    public User(String first_name, String last_name, String email){
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
