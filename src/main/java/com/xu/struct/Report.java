@@ -3,11 +3,11 @@ package com.xu.struct;
 import java.util.List;
 
 public class Report {
-    List<Session> report_session;
+    List<ReportSession> report_session;
     double workedHour;
     int totalReport;
 
-    public Report(List<Session> report_session, double workedHour, int totalReport) {
+    public Report(List<ReportSession> report_session, double workedHour, int totalReport) {
         this.report_session = report_session;
         this.workedHour = workedHour;
         this.totalReport = totalReport;
@@ -16,7 +16,7 @@ public class Report {
     public Report() {
     }
 
-    public List<Session> getReport_session() {
+    public List<ReportSession> getReport_session() {
         return report_session;
     }
 
@@ -28,7 +28,7 @@ public class Report {
         return totalReport;
     }
 
-    public void setReport_session(List<Session> report_session) {
+    public void setReport_session(List<ReportSession> report_session) {
         this.report_session = report_session;
     }
 

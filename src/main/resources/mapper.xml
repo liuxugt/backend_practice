@@ -27,6 +27,10 @@
         SELECT email from USERS;
     </select>
 
+    <select id="getUserByEmail" resultMap="userMap">
+        select * from USERS WHERE email=#{email};
+    </select>
+
 
     <insert id="createProject">
         INSERT INTO PROJECTS (name, user_id) VALUES (#{name}, #{uid});
@@ -48,6 +52,15 @@
         SELECT * FROM PROJECTS WHERE user_id=#{uid};
     </select>
 
+    <select id="getProjectByName" resultMap="projectMap">
+        SELECT * FROM PROJECTS WHERE user_id=#{uid} AND name=#{name};
+    </select>
+
+    <select id="getAllProjectName" resultMap="String">
+        SELECT name FROM PROJECTS WHERE user_id=#{uid};
+    </select>
+
+
     <insert id="createSession">
         INSERT INTO SESSIONS (start_time, end_time, counter, user_id, project_id) VALUES (#{start_time}, #{end_time}, #{counter}, #{uid}, #{pid});
     </insert>
@@ -64,4 +77,9 @@
         SELECT * FROM SESSION WHERE user_id=#{uid} AND project_id=#{pid};
     </select>
 
+    <update id="deleteAllUsers">
+        DELETE FROM USERS;
+        DELETE FROM PROJECTS;
+        DELETE FROM SESSIONS;
+    </update>
 </mapper>

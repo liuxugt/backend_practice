@@ -6,7 +6,10 @@ import com.xu.database.DataBaseSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.core.env.Environment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class pomodoroTracker {
@@ -71,33 +74,45 @@ public class pomodoroTracker {
     }
 
     public Project getProject(int uid, int pid){
-        return this.dataManager.getProject(uid, pid);
+        User user = dataManager.getUser(uid);
+        if(user == null){
+            return null;
+        }
 
+        return this.dataManager.getProject(uid, pid);
     }
 
     public List<Project> getAllProject(int uid){
-
         User user = dataManager.getUser(uid);
         if(user == null){
             return null;
         }
         List<Project> projects = dataManager.getAllProjects();
         if(projects == null){
-            return new ArrayList<Project>()
+            return new ArrayList<>();
         }
 
         return projects;
     }
 
     public Project updateProject(int uid, int pid, Project project){
+        if(this.dataManager.getProject(uid, pid) == null){
+            return null;
+        }
         return this.dataManager.updateProject(uid, pid, project.getName());
     }
 
     public Project deleteProject(int uid, int pid){
+        if(this.dataManager.getProject(uid, pid) == null){
+            return null;
+        }
         return this.dataManager.deleteProject(uid, pid);
     }
 
     public Session createSession(int uid, int pid, Session session){
+        if(this.dataManager.getProject(uid, pid) == null){
+            return null;
+        }
         return this.dataManager.createSession(uid, pid, session);
     }
 
@@ -106,7 +121,42 @@ public class pomodoroTracker {
     }
 
     public Report getReport(int uid, int pid, String startTime, String endTime, boolean includeCompletedPomodoros, boolean includeTotalHoursWorkedOnProject){
+        List<Session> sessions = this.dataManager.getAllSessions(uid, pid);
+        List<ReportSession> result = new ArrayList<ReportSession>();
+        double total_hours = 0;
+        int completedPomodoro = 0;
+        try{
+            Date startDate = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm").parse(startTime);
+            Date endDate = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm").parse(endTime);
 
+            for(Session session : sessions){
+                if(session.getStart_time().isEmpty() || session.getEnd_time().isEmpty()){
+                    continue;
+                }
+                Date start = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm").parse(session.getStart_time());
+                Date end = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm").parse(session.getEnd_time());
+
+                if((startDate.equals(start) || startDate.before(start)) && (endDate.equals(end) || endDate.after(end))){
+                    double hours = (end.getTime() - start.getTime())/1000/3600;
+                    total_hours += hours;
+                    completedPomodoro += session.getCounter();
+                    result.add(new ReportSession(session.getStart_time(), session.getEnd_time(), hours));
+                }
+            }
+        } catch(ParseException e){
+            throw new IllegalStateException("A exception in generating report");
+        }
+
+        Report report = new Report();
+        report.setReport_session(result);
+        if(includeCompletedPomodoros){
+            report.setTotalReport(completedPomodoro);
+        }
+        if(includeTotalHoursWorkedOnProject){
+            report.setWorkedHour(total_hours);
+        }
+
+        return report;
     }
 
 
