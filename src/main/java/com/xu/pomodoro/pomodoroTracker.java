@@ -3,7 +3,9 @@ package com.xu.pomodoro;
 import com.xu.struct.*;
 import com.xu.database.DataManager;
 import com.xu.database.DataBaseSessionFactory;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 import java.text.ParseException;
@@ -14,8 +16,9 @@ import java.util.List;
 
 public class pomodoroTracker {
 
-    DataManager dataManager;
+    private DataManager dataManager;
 
+    @Autowired
     public pomodoroTracker(Environment env){
         String mode = env.getProperty("mode");
 
@@ -26,8 +29,6 @@ public class pomodoroTracker {
             DataBaseSessionFactory dataBaseSessionFactory= new DataBaseSessionFactory(mode);
             SqlSessionFactory sqlSessionFactory = dataBaseSessionFactory.getFactory();
             dataManager = new DataManager(dataBaseSessionFactory);
-
-            function_create_new_table();
         }
         else{
             throw new IllegalStateException("Operation mode must be 'development' or 'production'");
@@ -37,7 +38,8 @@ public class pomodoroTracker {
 
     //API functions
     public User createUser(User user){
-        String newEmail = checkEmail(user.getEmail());
+        String newEmail = "123";
+        //String newEmail = checkEmail(user.getEmail());
         if(newEmail == null){
             return null;
         }
@@ -61,11 +63,11 @@ public class pomodoroTracker {
 
     public User deleteUser(int uid){
         User user = dataManager.getUser(uid);
-        dataManager.deleteUser();
+        dataManager.deleteUser(uid);
         return user;
     }
 
-    public User deleteAllUser(){
+    public void deleteAllUser(){
         dataManager.clearDatabase();
     }
 
@@ -87,7 +89,7 @@ public class pomodoroTracker {
         if(user == null){
             return null;
         }
-        List<Project> projects = dataManager.getAllProjects();
+        List<Project> projects = dataManager.getAllProjects(uid);
         if(projects == null){
             return new ArrayList<>();
         }
@@ -113,7 +115,7 @@ public class pomodoroTracker {
         if(this.dataManager.getProject(uid, pid) == null){
             return null;
         }
-        return this.dataManager.createSession(uid, pid, session);
+        return this.dataManager.createSession(uid, pid, session.getStart_time(), session.getEnd_time(), session.getCounter());
     }
 
     public Session updateSession(int uid, int pid, int sid, Session session){
@@ -175,6 +177,7 @@ public class pomodoroTracker {
 
     public boolean checkProjectNameConflict(int uid, String name){
         List<String> names = dataManager.getALlProjectNames(uid);
+        System.out.println(names);
         if(names.contains(name)){
             return true;
         }

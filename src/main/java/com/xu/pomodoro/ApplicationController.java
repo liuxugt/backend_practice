@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 public class ApplicationController {
-
     @Autowired
     private pomodoroTracker ptt;
 
@@ -46,16 +45,18 @@ public class ApplicationController {
     @RequestMapping(method = RequestMethod.POST, value = "/users")
     public ResponseEntity<?> createUser(@RequestBody User newUser)
     {
+        System.out.println("test output");
         if(newUser.getEmail() == null || newUser.getEmail().isEmpty() ||
                 newUser.getFirst_name() == null || newUser.getFirst_name().isEmpty() ||
                 newUser.getLast_name() == null || newUser.getLast_name().isEmpty()){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if(!ptt.checkUserEmailConflict()){
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        //if(!ptt.checkUserEmailConflict(newUser.getEmail())){
+        //    return new ResponseEntity<>(HttpStatus.CONFLICT);
+        //}
 
+        System.out.println("test output");
         User createdUser = ptt.createUser(newUser);
         if(createdUser == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -122,6 +123,7 @@ public class ApplicationController {
     public ResponseEntity<?> deleteAllUsers()
     {
         ptt.deleteAllUser();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/users/{userID}/projects")
@@ -135,7 +137,7 @@ public class ApplicationController {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
-        if(!ptt.checkProjectNameConflict(id, newProject.getName())){
+        if(ptt.checkProjectNameConflict(id, newProject.getName())){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
 
@@ -179,13 +181,13 @@ public class ApplicationController {
         } catch (NumberFormatException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
+        System.out.println("here");
         Project result = ptt.getProject(uid, pid);
         if(result == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
     }
 
@@ -202,13 +204,15 @@ public class ApplicationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if(!ptt.checkProjectNameConflict(uid, newProject.getName())){
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        System.out.println(newProject.getName());
+        if(ptt.checkProjectNameConflict(uid, newProject.getName())){
+            return new ResponseEntity<>("duplicate name", HttpStatus.CONFLICT);
         }
 
         Project exist = ptt.getProject(uid, pid);
         if(exist == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            System.out.println("not found");
+            return new ResponseEntity<>("not found", HttpStatus.NOT_FOUND);
         }
 
         Project updated = ptt.updateProject(uid, pid, newProject);

@@ -18,9 +18,11 @@ public class DataManager {
     }
 
     public User createUser(String firstName, String lastName, String email){
+        System.out.println("here");
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);
+            System.out.println(firstName + " " + lastName + " " + email);
             mapper.createUser(firstName,lastName,email);
             return mapper.getUserByEmail(email);
         } finally {
@@ -68,8 +70,6 @@ public class DataManager {
     }
 
     public List<User> getAllUsers(){
-
-
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);
@@ -92,6 +92,7 @@ public class DataManager {
     }
 
     public Project createProject(int uid, String projectName){
+        System.out.println("begin creating project");
 
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try{
@@ -119,6 +120,7 @@ public class DataManager {
 
     public Project getProject(int uid, int pid){
 
+        System.out.println("here");
         SqlSession sqlSession = sqlSessionFactory.openSession();
         try{
             Mapper mapper = sqlSession.getMapper(Mapper.class);

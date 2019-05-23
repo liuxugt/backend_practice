@@ -4,8 +4,8 @@ public class Session {
     String start_time;
     String end_time;
     int counter;
-    int uid;
-    int pid;
+    int user_id;
+    int project_id;
 
     public Session(){};
 
@@ -13,8 +13,8 @@ public class Session {
         this.start_time = start_time;
         this.end_time = end_time;
         this.counter = counter;
-        this.uid = uid;
-        this.pid = pid;
+        this.user_id = uid;
+        this.project_id = pid;
     }
 
     public void setStart_time(String start_time) {
@@ -29,9 +29,9 @@ public class Session {
         this.counter = counter;
     }
 
-    public void setUid(int uid) { this.uid = uid; }
+    public void setUid(int uid) { this.user_id = uid; }
 
-    public void setPid(int pid) {this.pid = pid;}
+    public void setPid(int pid) {this.project_id = pid;}
 
     public String getStart_time() {
         return start_time;
@@ -45,6 +45,6 @@ public class Session {
         return counter;
     }
 
-    public int getUid(){return uid;}
-    public int getPid(){ return pid; }
+    public int getUid(){return user_id;}
+    public int getPid(){ return project_id; }
 }

@@ -3,7 +3,8 @@ package com.xu.database;
 import com.xu.struct.Project;
 import com.xu.struct.Session;
 import com.xu.struct.User;
-import org.apache.ibatis.annotations.Param
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
